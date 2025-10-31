@@ -13,6 +13,19 @@ Este archivo sirve para llevar el control centralizado de las actualizaciones de
 
 ---
 
+## Cambios recientes
+
+Se listan aquí las modificaciones realizadas en esta sesión (útil para el primer commit después de refactorizar la estructura de archivos).
+
+- 2025-10-31 — GH
+  - feat: Separado el HTML, CSS y JS en archivos independientes: `index.html`, `styles.css`, `script.js`.
+  - feat: Añadido archivo `styles.css` con estilos globales y reglas para impresión.
+  - feat: Añadido archivo `script.js` con toda la lógica de la aplicación (simulación de DB, CRUD, generación de links, renderizado de vistas).
+  - chore: Actualizado `index.html` para referenciar `styles.css` y `script.js` y así mejorar mantenimiento.
+
+Notas: después de subir, abrir `index.html` en un navegador para verificar que Tailwind y las fuentes se cargan y que las interacciones funcionan como antes.
+
+
 ## Formato y Convenciones
 
 - Fecha: ISO (YYYY-MM-DD).
@@ -38,10 +51,8 @@ Formato recomendado por entrada:
 Ejemplo vacío (completar abajo):
 
 - 2025-10-31 — GH — 0.1.0
-- 2025-10-31 — GH — 0.1.0
-  - feat: Separación de código en archivos: `styles.css` y `script.js`; actualizado `index.html` para referenciarlos; creado `README.md` de seguimiento.
-  - chore: Preparados commits locales para push al remoto.
-  - Notas: Commit local creado; se intentó push al remoto (ver historial git para estado final).
+  - feat: Añadido README de seguimiento y plantillas de reporte.
+  - Notas: Ninguna.
 
 ---
 
@@ -103,15 +114,6 @@ Ejemplo:
 - 2025-10-31 — GH — 0.1.0
   - feat: Añadido README de seguimiento y plantillas de reporte.
   - Notas: Plantilla inicial creada.
-
-### Últimos cambios
-- 2025-10-31 — GH
-  - chore: Separado el código en archivos estáticos.
-    - `index.html`: ahora enlaza a `styles.css` y `script.js` en la raíz del proyecto.
-    - `styles.css`: contiene los estilos extraídos del bloque <style>.
-    - `script.js`: contiene toda la lógica JS que estaba inline en `index.html`.
-  - docs: Actualizado `README.md` con este registro de cambios y plantillas para bugs/tareas.
-  - Notas: Recomendado revisar en navegador y, si aparece algún fallo por orden de carga, añadir `defer` al script o envolver inicialización en `DOMContentLoaded`.
 
 ### Bug crítico
 - BUG-2025-001

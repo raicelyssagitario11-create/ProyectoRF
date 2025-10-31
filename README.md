@@ -38,8 +38,10 @@ Formato recomendado por entrada:
 Ejemplo vacío (completar abajo):
 
 - 2025-10-31 — GH — 0.1.0
-  - feat: Añadido README de seguimiento y plantillas de reporte.
-  - Notas: Ninguna.
+- 2025-10-31 — GH — 0.1.0
+  - feat: Separación de código en archivos: `styles.css` y `script.js`; actualizado `index.html` para referenciarlos; creado `README.md` de seguimiento.
+  - chore: Preparados commits locales para push al remoto.
+  - Notas: Commit local creado; se intentó push al remoto (ver historial git para estado final).
 
 ---
 

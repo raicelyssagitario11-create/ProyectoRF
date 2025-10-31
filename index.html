@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plataforma de Reportes Financieros</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+
+    <main class="min-h-screen p-4 sm:p-8 flex justify-center items-start">
+        <div id="app-container" class="w-full max-w-6xl">
+            <!-- Mensaje de Carga y Error -->
+            <div id="message-box" class="fixed top-4 right-4 p-3 rounded-lg shadow-lg text-white font-medium z-50 transition-opacity duration-300 opacity-0 hidden"></div>
+
+            <!-- 1. Vista de Login (Por defecto) -->
+            <div id="login-view" class="flex justify-center items-center h-screen-main">
+                <div class="card w-full max-w-md">
+                    <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Acceso de Administrador</h1>
+                    <form id="login-form" onsubmit="event.preventDefault(); handleLogin();">
+                        <div class="mb-4">
+                            <label for="admin-email" class="block text-sm font-medium text-gray-700 mb-1">Email (Simulado)</label>
+                            <input type="email" id="admin-email" class="input-field" value="admin@reportes.com" required>
+                        </div>
+                        <div class="mb-6">
+                            <label for="admin-password" class="block text-sm font-medium text-gray-700 mb-1">Contraseña (Simulada)</label>
+                            <input type="password" id="admin-password" class="input-field" value="superadmin123" required>
+                        </div>
+                        <button type="submit" class="btn-primary w-full">Iniciar Sesión</button>
+                    </form>
+                    <p class="mt-4 text-sm text-gray-500 text-center">Credenciales de prueba: admin@reportes.com / superadmin123</p>
+                </div>
+            </div>
+
+            <!-- 2. Panel de Administración -->
+            <div id="admin-dashboard-view" class="hidden">
+                <div class="no-print flex justify-between items-center mb-6">
+                    <h1 class="text-4xl font-bold text-gray-800">Panel de Administración</h1>
+                    <button onclick="logoutAdmin()" class="px-4 py-2 bg-red-500 text-white rounded-lg font-semibold hover:bg-red-600 transition">Cerrar Sesión</button>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Columna de Gestión (CRUD) -->
+                    <div class="lg:col-span-1 space-y-6 no-print">
+                        <div class="card">
+                            <h2 class="text-xl font-semibold mb-4 text-gray-800">1. Gestión de Clientes</h2>
+                            <form id="client-form" onsubmit="event.preventDefault(); handleClientCRUD('create');">
+                                <input type="text" id="client-name" class="input-field mb-2" placeholder="Nombre del Cliente" required>
+                                <input type="email" id="client-email" class="input-field mb-4" placeholder="Email de Contacto" required>
+                                <button type="submit" class="btn-primary w-full">Crear Cliente</button>
+                            </form>
+                        </div>
+
+                        <div class="card">
+                            <h2 class="text-xl font-semibold mb-4 text-gray-800">2. Asignar Proyecto</h2>
+                            <form id="project-form" onsubmit="event.preventDefault(); handleProjectCRUD('create');">
+                                <select id="project-client-id" class="input-field mb-2" required>
+                                    <option value="" disabled selected>Seleccione Cliente</option>
+                                    <!-- Opciones cargadas por JS -->
+                                </select>
+                                <input type="text" id="project-name" class="input-field mb-2" placeholder="Nombre del Proyecto" required>
+                                <input type="number" id="project-budget" class="input-field mb-4" placeholder="Monto Total (€)" required min="1">
+                                <button type="submit" class="btn-primary w-full bg-blue-500 hover:bg-blue-600">Crear Proyecto</button>
+                            </form>
+                        </div>
+
+                        <div class="card">
+                            <h2 class="text-xl font-semibold mb-4 text-gray-800">3. Registrar Pago</h2>
+                            <form id="payment-form" onsubmit="event.preventDefault(); handlePaymentCRUD('create');">
+                                <select id="payment-project-id" class="input-field mb-2" required>
+                                    <option value="" disabled selected>Seleccione Proyecto Activo</option>
+                                    <!-- Opciones cargadas por JS -->
+                                </select>
+                                <input type="number" id="payment-amount" class="input-field mb-2" placeholder="Monto del Pago (€)" required min="1">
+                                <input type="date" id="payment-date" class="input-field mb-4" required>
+                                <button type="submit" class="btn-primary w-full bg-purple-500 hover:bg-purple-600">Registrar Pago</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Columna de Reportes y Logs -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <!-- Clientes y Generación de Link -->
+                        <div class="card">
+                            <h2 class="text-xl font-semibold mb-4 text-gray-800">Clientes y Links de Reporte</h2>
+                            <div id="clients-list" class="space-y-3">
+                                <!-- Lista de clientes y botones de link -->
+                            </div>
+                        </div>
+
+                        <!-- Logs de Actividad -->
+                        <div class="card">
+                            <h2 class="text-xl font-semibold mb-4 text-gray-800">Logs de Actividad (Admin)</h2>
+                            <div id="logs-list" class="max-h-64 overflow-y-auto text-sm bg-gray-50 p-3 rounded-lg">
+                                <!-- Logs cargados por JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Vista de Cliente (Dashboard) -->
+            <div id="client-dashboard-view" class="hidden">
+                <!-- Contenedor del Reporte (para optimización de impresión) -->
+                <div class="card report-container max-w-4xl mx-auto p-6 sm:p-10 mt-8">
+                    <div id="client-report-content">
+                        <!-- Contenido dinámico del reporte del cliente -->
+                    </div>
+                    <div class="no-print mt-6 text-center">
+                        <button onclick="window.print()" class="btn-primary bg-blue-600 hover:bg-blue-700 text-lg">
+                            Generar Reporte en PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Vista de Error (Token Inválido/Expirado) -->
+            <div id="error-view" class="hidden flex justify-center items-center h-screen-main">
+                <div class="card w-full max-w-md bg-red-50 border-red-200 border">
+                    <h1 class="text-3xl font-bold text-red-700 mb-4 text-center">Acceso Denegado (403)</h1>
+                    <p id="error-message" class="text-red-600 text-center mb-6">El enlace de acceso es inválido o ha expirado. Por favor, solicite un nuevo enlace al administrador.</p>
+                    <a href="." class="block w-full text-center px-4 py-2 bg-red-500 text-white rounded-lg font-semibold hover:bg-red-600 transition">Volver al Inicio</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="./script.js"></script>
+</body>
+</html>

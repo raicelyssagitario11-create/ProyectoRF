@@ -1,0 +1,78 @@
+/* Configuración global de fuentes y esquinas redondeadas */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f7f9fb;
+}
+
+/* Estilos generales para el layout */
+.card {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.input-field {
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    width: 100%;
+    transition: border-color 0.2s;
+}
+
+.input-field:focus {
+    border-color: #3b82f6; /* Blue-500 */
+    outline: none;
+}
+
+.btn-primary {
+    background-color: #10b981; /* Emerald-500 */
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: #059669; /* Emerald-600 */
+}
+
+/* --- Estilos para la Generación de PDF (window.print()) --- */
+@media print {
+    /* Ocultar elementos de UI no esenciales */
+    .no-print { display: none !important; }
+
+    /* Optimizar el contenedor del reporte */
+    .report-container {
+        max-width: none !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        background-color: white !important;
+    }
+
+    /* Forzar el color del texto y bordes para impresión en blanco y negro */
+    body, h1, h2, h3, p, table {
+        color: #000 !important;
+    }
+
+    /* Mejorar el aspecto de las tablas en impresión */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        border: 1px solid #000;
+        padding: 8px;
+    }
+
+    /* Añadir saltos de página después de secciones clave (si es necesario) */
+    .page-break-after {
+        page-break-after: always;
+    }
+}
+
+/* Ajuste menor para alturas de pantalla usadas en la plantilla */
+.h-screen-main { min-height: calc(100vh - 2rem); }

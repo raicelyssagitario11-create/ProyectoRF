@@ -13,19 +13,6 @@ Este archivo sirve para llevar el control centralizado de las actualizaciones de
 
 ---
 
-## Cambios recientes
-
-Se listan aquí las modificaciones realizadas en esta sesión (útil para el primer commit después de refactorizar la estructura de archivos).
-
-- 2025-10-31 — GH
-  - feat: Separado el HTML, CSS y JS en archivos independientes: `index.html`, `styles.css`, `script.js`.
-  - feat: Añadido archivo `styles.css` con estilos globales y reglas para impresión.
-  - feat: Añadido archivo `script.js` con toda la lógica de la aplicación (simulación de DB, CRUD, generación de links, renderizado de vistas).
-  - chore: Actualizado `index.html` para referenciar `styles.css` y `script.js` y así mejorar mantenimiento.
-
-Notas: después de subir, abrir `index.html` en un navegador para verificar que Tailwind y las fuentes se cargan y que las interacciones funcionan como antes.
-
-
 ## Formato y Convenciones
 
 - Fecha: ISO (YYYY-MM-DD).
@@ -139,3 +126,21 @@ Ejemplo:
 ---
 
 (Archivo generado automáticamente el 2025-10-31)
+
+---
+
+## Despliegue / Push remoto
+
+Se registran a continuación las acciones de control de versiones y despliegue realizadas recientemente.
+
+- Fecha: 2025-10-31 — Autor: GH
+  - Acción: Separación de código en archivos estáticos y subida al repositorio remoto.
+  - Archivos añadidos:
+    - `styles.css` — estilos extraídos desde el bloque <style> en `index.html`.
+    - `script.js` — lógica JavaScript extraída desde el bloque <script> en `index.html`.
+  - Archivo modificado:
+    - `index.html` — ahora referencia `styles.css` y `script.js` en lugar de contener código inline.
+  - Commit: chore: separar HTML/CSS/JS; agregar styles.css y script.js; actualizar README
+  - Remote push: intentado/push al remoto `raicelys` -> https://github.com/raicelyssagitario11-create/ProyectoRF.git
+  - Notas: Si utilizas un remoto diferente o el nombre `origin`, ajusta los comandos de push según corresponda.
+

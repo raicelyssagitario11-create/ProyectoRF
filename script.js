@@ -193,61 +193,97 @@ const getClientDataByToken = (token) => {
 
 // --- LÓGICA CRUD PARA ADMIN (SIMULACIÓN DE RLS Y ADMIN CRUD FUNCTIONS) ---
 
-/** Maneja la creación de Clientes */
-const handleClientCRUD = (action) => {
+/** Maneja la creación de Clientes (Supabase o local) */
+const handleClientCRUD = async (action) => {
     if (action === 'create') {
         const name = document.getElementById('client-name').value;
         const email = document.getElementById('client-email').value;
+        if (window.AppSupabase && AppSupabase.initialized && typeof AppSupabase.createClient === 'function') {
+            try {
+                await AppSupabase.createClient(name, email);
+                logAction('CREATE', `Cliente creado en Supabase: ${name}`);
+                document.getElementById('client-form').reset();
+                renderAdminDashboard();
+                showMessage('Cliente creado exitosamente (Supabase).');
+                return;
+            } catch (e) {
+                showMessage('Error al crear cliente en Supabase.', 'error');
+                return;
+            }
+        }
+        // Fallback local
         const newId = `cli-${(__DB.clients.length + 1).toString().padStart(3, '0')}`;
-
         __DB.clients.push({ id: newId, name, email, created_at: Date.now() });
         logAction('CREATE', `Cliente creado: ${name} (${newId})`);
         document.getElementById('client-form').reset();
         renderAdminDashboard();
-        showMessage('Cliente creado exitosamente.');
+        showMessage('Cliente creado exitosamente (local).');
     }
 };
 
-/** Maneja la creación de Proyectos */
-const handleProjectCRUD = (action) => {
+/** Maneja la creación de Proyectos (Supabase o local) */
+const handleProjectCRUD = async (action) => {
     if (action === 'create') {
         const clientId = document.getElementById('project-client-id').value;
         const name = document.getElementById('project-name').value;
         const budget = parseFloat(document.getElementById('project-budget').value);
-        const newId = `proj-${(__DB.projects.length + 1).toString().padStart(3, '0')}`;
-
         if (!clientId || !name || isNaN(budget) || budget <= 0) {
             return showMessage('Datos de proyecto incompletos.', 'error');
         }
-
+        if (window.AppSupabase && AppSupabase.initialized && typeof AppSupabase.createProject === 'function') {
+            try {
+                await AppSupabase.createProject(clientId, name, budget);
+                logAction('CREATE', `Proyecto creado en Supabase: ${name}`);
+                document.getElementById('project-form').reset();
+                renderAdminDashboard();
+                showMessage('Proyecto creado y asignado (Supabase).');
+                return;
+            } catch (e) {
+                showMessage('Error al crear proyecto en Supabase.', 'error');
+                return;
+            }
+        }
+        // Fallback local
+        const newId = `proj-${(__DB.projects.length + 1).toString().padStart(3, '0')}`;
         __DB.projects.push({
             id: newId,
             client_id: clientId,
             name: name,
             budget: budget,
-            status: 'Active', // Por defecto, hasta que se pague
+            status: 'Active',
             created_at: Date.now()
         });
-
         logAction('CREATE', `Proyecto "${name}" creado para ${__DB.clients.find(c => c.id === clientId)?.name}.`);
         document.getElementById('project-form').reset();
         renderAdminDashboard();
-        showMessage('Proyecto creado y asignado.');
+        showMessage('Proyecto creado y asignado (local).');
     }
 };
 
-/** Maneja el registro de Pagos */
-const handlePaymentCRUD = (action) => {
+/** Maneja el registro de Pagos (Supabase o local) */
+const handlePaymentCRUD = async (action) => {
     if (action === 'create') {
         const projectId = document.getElementById('payment-project-id').value;
         const amount = parseFloat(document.getElementById('payment-amount').value);
         const date = document.getElementById('payment-date').value;
-        const newId = `pay-${(__DB.payments.length + 1).toString().padStart(3, '0')}`;
-
         if (!projectId || isNaN(amount) || amount <= 0 || !date) {
             return showMessage('Datos de pago incompletos.', 'error');
         }
-
+        if (window.AppSupabase && AppSupabase.initialized && typeof AppSupabase.createPayment === 'function') {
+            try {
+                await AppSupabase.createPayment(projectId, amount, date);
+                logAction('CREATE', `Pago registrado en Supabase para proyecto ${projectId}`);
+                document.getElementById('payment-form').reset();
+                renderAdminDashboard();
+                showMessage('Pago registrado exitosamente (Supabase).');
+                return;
+            } catch (e) {
+                showMessage('Error al registrar pago en Supabase.', 'error');
+                return;
+            }
+        }
+        // Fallback local
+        const newId = `pay-${(__DB.payments.length + 1).toString().padStart(3, '0')}`;
         __DB.payments.push({
             id: newId,
             project_id: projectId,
@@ -255,11 +291,10 @@ const handlePaymentCRUD = (action) => {
             date: date,
             created_at: Date.now()
         });
-
         logAction('CREATE', `Pago de ${formatCurrency(amount)} registrado para proyecto ${projectId}.`);
         document.getElementById('payment-form').reset();
         renderAdminDashboard();
-        showMessage('Pago registrado exitosamente.');
+        showMessage('Pago registrado exitosamente (local).');
     }
 };
 
